@@ -35,6 +35,24 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+
+        Schema::create('addresses', function (Blueprint $table) {
+            $table->id();
+            // Um endereço pertence a um usuário
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+
+            $table->string('titulo')->default('Principal'); // Ex: Casa, Trabalho
+            $table->string('destinatario'); // Quem vai receber
+            $table->string('telefone');
+            $table->string('cep');
+            $table->string('logradouro');
+            $table->string('numero');
+            $table->string('bairro');
+            $table->string('cidade');
+            $table->string('estado', 2);
+            $table->string('complemento')->nullable();
+            $table->timestamps();
+        });
     }
 
     /**

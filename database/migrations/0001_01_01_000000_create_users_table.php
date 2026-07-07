@@ -17,8 +17,12 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('aceitou_termos')->default(false);
+            $table->decimal('termos_versao', 3, 1)->default(1.0);
             $table->rememberToken();
             $table->timestamps();
+
+             $table->softDeletes(); 
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -39,7 +43,7 @@ return new class extends Migration
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
             // Um endereço pertence a um usuário
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained();
 
             $table->string('titulo')->default('Principal'); // Ex: Casa, Trabalho
             $table->string('destinatario'); // Quem vai receber

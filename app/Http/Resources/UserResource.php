@@ -27,11 +27,11 @@ class UserResource extends JsonResource
 
             // 2. Proteção de performance para o Spatie
             // Só executa as queries de permissão se a relação de roles tiver sido carregada (Eager Loading)
-            'roles' => $this->whenRelationLoaded('roles', function () {
+            'roles' => $this->whenLoaded('roles', function () {
                 return $this->getRoleNames();
             }),
 
-            'permissions' => $this->whenRelationLoaded('permissions', function () {
+            'permissions' => $this->whenLoaded('permissions', function () {
                 return $this->getAllPermissions()->pluck('name');
             }),
 

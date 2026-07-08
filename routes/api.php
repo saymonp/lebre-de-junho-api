@@ -24,10 +24,12 @@ Route::middleware('auth:sanctum')->group(function () {
 // 3. ROTAS ADMINISTRATIVAS (AdminUserController)
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::get('/users', [AdminUserController::class, 'index']);
-    Route::delete('/users/{user}', [AdminUserController::class, 'destroy']);
     Route::post('/users/{user}/roles', [AdminUserController::class, 'assignRole']);
     Route::post('/users/{user}/permissions', [AdminUserController::class, 'assignPermissions']);
-    
+
+    Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])
+        ->middleware('permission:delete users');
+        
     // RoleController e PermissionController no futuro:
     Route::get('/roles', [AdminUserController::class, 'listRoles']);
     Route::get('/permissions', [AdminUserController::class, 'listPermissions']);

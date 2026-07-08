@@ -36,7 +36,7 @@ class RoleSeeder extends Seeder
             'guard_name' => 'api'
         ]);
 
-        $userRole = Role::firstOrCreate([
+        Role::firstOrCreate([
             'name' => 'user',
             'guard_name' => 'api'
         ]);
@@ -56,7 +56,6 @@ class RoleSeeder extends Seeder
                 'name' => 'Admin User',
                 'password' => bcrypt($password),
                 'email_verified_at' => now(),
-                'slug' => 'Adm'
             ]
         );
 

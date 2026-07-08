@@ -24,14 +24,12 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
-        $nome = fake()->name();
         return [
-            'name' => $nome,
+            'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
-            'slug' => Str::slug($nome),
             'google_id' => Str::random(6),
             'aceitou_termos' => true,
             'termos_versao' => 1.0

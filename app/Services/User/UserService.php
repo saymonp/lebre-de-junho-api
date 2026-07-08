@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use App\Jobs\SendEmailJob;
 
 class UserService
 {
@@ -92,14 +93,13 @@ class UserService
         $frontUrl = config('app.frontend_url');
 
         // Dispara o Job de e-mail em segundo plano
-        // TODO Jobs de envio de email
-        //SendEmailJob::dispatch(
-        //    $user->email,
-        //    'Confirme seu e-mail - Lebre de Junho',
-        //    "<h1>Bem-vindo(a), {$user->name}!</h1>
-        //     <p>Obrigado por se cadastrar na Lebre de Junho. Para ativar sua conta, confirme seu e-mail clicando no link abaixo:</p>
-        //     <a href='{$frontUrl}/verify-email?token={$token}&email=" . urlencode($user->email) . "'>Confirmar E-mail</a>"
-        //);
+        SendEmailJob::dispatch(
+            $user->email,
+            'Confirme seu e-mail - Lebre de Junho',
+            "<h1>Bem-vindo(a), {$user->name}!</h1>
+             <p>Obrigado por se cadastrar na Lebre de Junho. Para ativar sua conta, confirme seu e-mail clicando no link abaixo:</p>
+             <a href='{$frontUrl}/verify-email?token={$token}&email=" . urlencode($user->email) . "'>Confirmar E-mail</a>"
+        );
 
         return $user;
     }
@@ -226,20 +226,14 @@ class UserService
             $frontUrl = config('app.frontend_url');
 
             // Dispara o Job enviando o $token limpo na URL para o cliente clicar
-            /**
-             * TODO SendEmailJob
-             */
-
-            /**
-             *SendEmailJob::dispatch(
-             *    $user->email,
-             *    'Recuperação de Senha - Lebre de Junho',
-             *    "<h1>Olá, {$user->name}!</h1>
-             * <p>Recebemos uma solicitação para redefinir a sua senha.</p>
-             * <p>Clique no link abaixo para prosseguir:</p>
-             * <a href='{$frontUrl}/reset-password?token={$token}&email=" . urlencode($user->email) . "'>Redefinir Senha</a>"
-             *);
-             */
+             SendEmailJob::dispatch(
+                 $user->email,
+                 'Recuperação de Senha - Lebre de Junho',
+                 "<h1>Olá, {$user->name}!</h1>
+              <p>Recebemos uma solicitação para redefinir a sua senha.</p>
+              <p>Clique no link abaixo para prosseguir:</p>
+              <a href='{$frontUrl}/reset-password?token={$token}&email=" . urlencode($user->email) . "'>Redefinir Senha</a>"
+             );
         }
 
         return true;

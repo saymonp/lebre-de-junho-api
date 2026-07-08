@@ -15,7 +15,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Str;
 
-#[Fillable(['name', 'email', 'password', 'aceitou_termos', 'termos_versao'])]
+#[Fillable(['name', 'email', 'password', 'aceitou_termos', 'termos_versao', 'google_id'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -31,8 +31,6 @@ class User extends Authenticatable
         'email',
         'password',
         'google_id',
-        'avatar',
-        'slug',
         'aceitou_termos',
         'termos_versao'
     ];
@@ -54,21 +52,4 @@ class User extends Authenticatable
         return $this->hasMany(Address::class);
     }
 
-    protected static function booted()
-    {
-        static::creating(function ($user) {
-            $user->slug = static::generateUniqueSlug($user->name);
-        });
-    }
-
-    private static function generateUniqueSlug($name)
-    {
-        $slug = Str::slug($name);
-
-        // Verifica se já existe alguém com esse slug na tabela de USERS
-        $count = static::where('slug', 'like', "{$slug}%")->count();
-
-        // Se já existir, concatena o número da contagem + 1 para ser único
-        return $count ? "{$slug}-" . ($count + 1) : $slug;
-    }
 }

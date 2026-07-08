@@ -16,7 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
+            $table->string('google_id')->nullable()->unique();
             $table->boolean('aceitou_termos')->default(false);
             $table->decimal('termos_versao', 3, 1)->default(1.0);
             $table->rememberToken();

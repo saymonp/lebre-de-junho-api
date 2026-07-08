@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ProfileResource;
-use App\Services\Profile\ProfileService;
+use App\Http\Resources\UserResource;
+use App\Services\Profile\UserService;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\Api\AssignPermissionsRequest;
@@ -15,18 +15,18 @@ use Illuminate\Http\JsonResponse;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class ProfileController extends Controller
+class UserController extends Controller
 {
     protected $service;
 
-    public function __construct(ProfileService $service)
+    public function __construct(UserService $service)
     {
         $this->service = $service;
     }
 
     public function getProfile(Request $request)
     {
-        return new ProfileResource(
+        return new UserResource(
             $this->service->getProfile($request->user())
         );
     }
@@ -64,7 +64,7 @@ class ProfileController extends Controller
 
         return response()->json([
             'message' => 'Cadastro realizado com sucesso! Por favor, verifique sua caixa de entrada para confirmar seu e-mail.',
-            'user'    => new ProfileResource($user)
+            'user'    => new UserResource($user)
         ], 201);
     }
 
@@ -88,7 +88,7 @@ class ProfileController extends Controller
             'message'      => 'E-mail verificado com sucesso! Bem-vindo à loja.',
             'access_token' => $apiToken,
             'token_type'   => 'Bearer',
-            'user'         => new ProfileResource($user->load(['roles', 'permissions'])),
+            'user'         => new UserResource($user->load(['roles', 'permissions'])),
         ], 200);
     }
 
@@ -105,7 +105,7 @@ class ProfileController extends Controller
         return response()->json([
             'access_token' => $apiToken,
             'token_type' => 'Bearer',
-            'user' => new ProfileResource($user->load(['roles', 'permissions'])),
+            'user' => new UserResource($user->load(['roles', 'permissions'])),
         ], 200);
     }
 
@@ -174,8 +174,7 @@ class ProfileController extends Controller
         $data = $request->validate([
             'email'        => 'required|email',
             'token'        => 'required|string',
-            'new_password' => 'required',
-            'string',
+            'new_password' => 'required'
         ]);
 
         $user = $this->service->resetPassword($data['token'], $data['email'], $data['new_password']);
@@ -185,7 +184,7 @@ class ProfileController extends Controller
         return response()->json([
             'access_token' => $apiToken,
             'token_type' => 'Bearer',
-            'user' => new ProfileResource($user->load(['roles', 'permissions'])),
+            'user' => new UserResource($user->load(['roles', 'permissions'])),
         ], 200);
     }
 
@@ -210,7 +209,7 @@ class ProfileController extends Controller
         // 2. Retorna a resposta padronizada com o UserResource carregando as novas relações
         return response()->json([
             'message' => "Permissões diretas atualizadas com sucesso para {$updatedUser->name}.",
-            'user'    => new ProfileResource($updatedUser->load(['roles', 'permissions'])),
+            'user'    => new UserResource($updatedUser->load(['roles', 'permissions'])),
         ], 200);
     }
 
@@ -225,7 +224,7 @@ class ProfileController extends Controller
         // 2. Retorna a resposta JSON no padrão ouro usando o Resource
         return response()->json([
             'message' => "Roles atualizadas com sucesso para o usuário {$updatedUser->name}.",
-            'user'    => new ProfileResource($updatedUser->load(['roles', 'permissions'])),
+            'user'    => new UserResource($updatedUser->load(['roles', 'permissions'])),
         ], 200);
     }
 
@@ -241,6 +240,6 @@ class ProfileController extends Controller
         $users = $this->service->listUsers((int) $perPage);
 
         // 3. Devolve a coleção inteira limpa, formatada e com os metadados do paginator
-        return ProfileResource::collection($users);
+        return UserResource::collection($users);
     }
 }

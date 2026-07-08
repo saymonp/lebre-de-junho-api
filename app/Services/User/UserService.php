@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
-class ProfileService
+class UserService
 {
     public function __construct() {}
 

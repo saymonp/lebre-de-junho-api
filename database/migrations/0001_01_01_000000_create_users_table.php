@@ -16,12 +16,23 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
+            $table->string('google_id')->nullable()->unique();
+            $table->boolean('aceitou_termos')->default(false);
+            $table->decimal('termos_versao', 3, 1)->default(1.0);
             $table->rememberToken();
             $table->timestamps();
+
+            $table->softDeletes();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
+            $table->string('email')->primary();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
+        });
+
+        Schema::create('email_verification_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
             $table->timestamp('created_at')->nullable();
@@ -34,6 +45,24 @@ return new class extends Migration
             $table->text('user_agent')->nullable();
             $table->longText('payload');
             $table->integer('last_activity')->index();
+        });
+
+        Schema::create('addresses', function (Blueprint $table) {
+            $table->id();
+            // Um endereço pertence a um usuário
+            $table->foreignId('user_id')->constrained();
+
+            $table->string('titulo')->default('Principal'); // Ex: Casa, Trabalho
+            $table->string('destinatario'); // Quem vai receber
+            $table->string('telefone');
+            $table->string('cep');
+            $table->string('logradouro');
+            $table->string('numero');
+            $table->string('bairro');
+            $table->string('cidade');
+            $table->string('estado', 2);
+            $table->string('complemento')->nullable();
+            $table->timestamps();
         });
     }
 

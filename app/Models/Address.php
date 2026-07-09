@@ -23,7 +23,8 @@ class Address extends Model
         'bairro',
         'cidade',
         'estado',
-        'complemento'
+        'complemento',
+        'padrao'
     ];
 
     public function user(): BelongsTo

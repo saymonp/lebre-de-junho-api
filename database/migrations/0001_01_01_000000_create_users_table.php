@@ -64,6 +64,7 @@ return new class extends Migration
             $table->string('complemento')->nullable();
             $table->string('padrao');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

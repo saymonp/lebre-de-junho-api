@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
-use App\Services\User\UserService;
+use App\Services\Address\AddressService;
 use App\Http\Requests\AssignPermissionsRequest;
 use App\Http\Requests\Address\AddressRequest;
 use App\Models\User;
@@ -15,7 +15,12 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class AddressController extends Controller
 {
-    protected $addressService;
+    protected AddressService $addressService;
+
+    public function __construct(AddressService $service)
+    {
+        $this->addressService = $service;
+    }
 
     public function index(Request $request): JsonResponse
     {

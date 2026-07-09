@@ -27,6 +27,10 @@ class Address extends Model
         'padrao'
     ];
 
+    protected $casts = [
+        'padrao' => 'boolean',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

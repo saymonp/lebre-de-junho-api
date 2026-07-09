@@ -23,7 +23,12 @@ class Address extends Model
         'bairro',
         'cidade',
         'estado',
-        'complemento'
+        'complemento',
+        'padrao'
+    ];
+
+    protected $casts = [
+        'padrao' => 'boolean',
     ];
 
     public function user(): BelongsTo

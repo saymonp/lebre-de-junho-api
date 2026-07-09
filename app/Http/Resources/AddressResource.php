@@ -20,6 +20,7 @@ class AddressResource extends JsonResource
             'destinatario' => $this->destinatario,
             'telefone' => $this->telefone,
             'cep' => $this->cep,
+            'padrao' => $this->padrao,
             // Linha única formatada para facilitar a exibição na Dashboard/Nuxt
             'endereco_completo' => "{$this->logradouro}, nº {$this->numero} - {$this->bairro}, {$this->cidade}/{$this->estado}",
             'detalhes' => [

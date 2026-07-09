@@ -34,6 +34,7 @@ class AddressRequest extends FormRequest
             'cidade'       => 'required|string|max:255',
             'estado'       => 'required|string|size:2',
             'complemento'  => 'nullable|string|max:255',
+            'padrao'       => 'nullable|boolean'
         ];
     }
 }

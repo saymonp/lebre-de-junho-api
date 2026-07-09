@@ -24,7 +24,7 @@ class AddressFactory extends Factory
 
             'titulo' => $this->faker->randomElement(['Casa', 'Trabalho', 'Casa dos Pais']),
             'destinatario' => $this->faker->name(),
-            'telefone' => $this->faker->cellphoneNumber(), // Formato: (XX) 9XXXX-XXXX
+            'telefone' => $this->faker->phoneNumber(), // Formato: (XX) 9XXXX-XXXX
             'cep' => $this->faker->postcode(), // Remove hifens se sua coluna for apenas números
             'logradouro' => $this->faker->streetName(),
             'numero' => $this->faker->buildingNumber(),

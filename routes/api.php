@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\AdminUserController;
+use App\Http\Controllers\Api\AddressController;
 
 // 1. ROTAS PÚBLICAS (AuthController)
 Route::post('/register', [AuthController::class, 'register']);
@@ -29,8 +30,17 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 
     Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])
         ->middleware('permission:delete users');
-        
+
     // RoleController e PermissionController no futuro:
     Route::get('/roles', [AdminUserController::class, 'listRoles']);
     Route::get('/permissions', [AdminUserController::class, 'listPermissions']);
+});
+
+// ROTAS DE ENDEREÇO
+Route::middleware(['auth:sanctum'])->prefix('addresses')->group(function () {
+    Route::post('/', [AddressController::class, 'store']);
+    Route::put('/{id}', [AddressController::class, 'update']);
+    Route::delete('/{id}', [AddressController::class, 'destroy']);
+    Route::get('/{id}', [AddressController::class, 'show']);
+    Route::get('/', [AddressController::class, 'index']);
 });

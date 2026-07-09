@@ -18,7 +18,6 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'slug' => $this->slug,
             'is_admin' => $this->is_admin,
 
             // 1. Proteção de performance usando whenLoaded para os Endereços

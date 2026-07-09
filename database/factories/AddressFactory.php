@@ -32,6 +32,7 @@ class AddressFactory extends Factory
             'cidade' => $this->faker->city(),
             'estado' => $this->faker->stateAbbr(), // Retorna siglas como RS, SP, SC
             'complemento' => $this->faker->optional(0.6)->secondaryAddress(), // 60% de chance de ter algo como "Apto 302" ou "Bloco B"
-        ];
+            'padrao' => $this->faker->boolean(0),
+            ];
     }
 }

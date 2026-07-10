@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Contracts\User as SocialiteUser;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use App\Jobs\SendEmailJob;
 
@@ -38,33 +38,30 @@ class UserService
         return true;
     }
 
-    public function handleGoogleCallback()
+    /**
+     * Resolve o cadastro/login via Google e retorna o Token de acesso.
+     */
+    public function loginOrCreateFromGoogle(SocialiteUser $googleUser): string
     {
-        $googleUser = Socialite::driver('google')->user();
+        // 1. Verifica se o e-mail já existe para não sobrescrever papéis (roles) à toa
+        $userExists = User::where('email', $googleUser->getEmail())->exists();
 
-        // Verificamos se o usuário já existe antes do updateOrCreate
-        $userExists = User::where('email', $googleUser->email)->exists();
-
+        // 2. Cria ou atualiza o vínculo do usuário
         $user = User::updateOrCreate([
-            'email' => $googleUser->email,
+            'email' => $googleUser->getEmail(),
         ], [
-            'name' => $googleUser->name,
-            'google_id' => $googleUser->id,
-            'avatar' => $googleUser->avatar,
+            'name'      => $googleUser->getName(),
+            'google_id' => $googleUser->getId(),
+            'email_verified_at' => now()
         ]);
 
-        // Se for um novo usuário, atribui a role padrão
+        // 3. Se for uma conta nova, atribui a role de cliente comum
         if (!$userExists) {
             $user->assignRole('user');
         }
 
-        $apiToken = $user->createToken('auth_token')->plainTextToken;
-
-        // Redireciona para o frontendlevando o token na URL
-        // O frontend captura o token e guarda no localStorage
-        $frontend = config('services.google.redirect');
-
-        return redirect($frontend . "/auth/success?token={$apiToken}");
+        // 4. Gera o token do Sanctum para esse usuário logado
+        return $user->createToken('auth_token')->plainTextToken;
     }
 
     public function register(array $data): User
@@ -202,8 +199,6 @@ class UserService
 
         return true;
     }
-
-    public function validateEmail() {}
 
     /**
      * Solicitar Recuperar Senha

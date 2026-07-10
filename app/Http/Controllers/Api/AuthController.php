@@ -9,6 +9,8 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Http\RedirectResponse;
 
 class AuthController extends Controller
 {
@@ -121,5 +123,30 @@ class AuthController extends Controller
             'token_type' => 'Bearer',
             'user' => new UserResource($user->load(['roles', 'permissions'])),
         ], 200);
+    }
+
+    /**
+     * Captura o callback do Google e redireciona para o Nuxt 3
+     */
+    public function handleGoogleCallback(): RedirectResponse
+    {
+        try {
+            // Captura os dados vindos do Google através do Socialite
+            $googleUser = Socialite::driver('google')->user();
+
+            // Executa a lógica de negócio no Service e pega o Token gerado
+            $apiToken = $this->service->loginOrCreateFromGoogle($googleUser);
+
+            // Busca a URL base do frontend
+            $frontendUrl = config('services.google.redirect_frontend');
+
+            // Redireciona o navegador do usuário direto para a página de sucesso do Nuxt
+            return redirect()->away("{$frontendUrl}/auth/success?token={$apiToken}");
+            
+        } catch (\Exception $e) {
+            // Em caso de erro (ex: token do Google expirado), manda para uma tela de erro no front
+            $frontendUrl = config('services.google.redirect_frontend');
+            return redirect()->away("{$frontendUrl}/auth/error?message=failed_google_auth");
+        }
     }
 }

@@ -3,14 +3,6 @@
 namespace App\Services\Address;
 
 use App\Models\Address;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use Laravel\Socialite\Facades\Socialite;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use App\Jobs\SendEmailJob;
 
 class AddressService
 {

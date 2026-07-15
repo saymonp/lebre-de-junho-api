@@ -26,8 +26,8 @@ class AddressService
     public function getAddresses(int $user_id)
     {
         return Address::where('user_id', $user_id)
-        ->orderBy('padrao', 'desc')
-        ->paginate(5)->withQueryString();
+            ->orderBy('padrao', 'desc')
+            ->paginate(5)->withQueryString();
     }
 
     public function create(array $data): Address
@@ -63,6 +63,20 @@ class AddressService
         $address = Address::where('id', $data['id'])
             ->where('user_id', $data['user_id'])
             ->firstOrFail();
+
+        // Se o endereço a ser deletado for padrão, então outro endereço
+        // passa a ser padrão
+        if ((bool) $address->padrao === true) {
+            $nextAddress = Address::where('user_id', $data['user_id'])
+                ->where('id', '!=', $address->id)
+                ->first();
+
+            if ($nextAddress) {
+                $nextAddress->update([
+                    'padrao' => true
+                ]);
+            }
+        }
 
         $address->delete();
 

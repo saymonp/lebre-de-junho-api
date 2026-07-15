@@ -25,6 +25,7 @@ class ProductRequest extends FormRequest
             // Informações Básicas
             'name' => 'required|string|max:255',
             'description' => 'required|string',
+            'cover_photo_path' => 'required|string',
 
             // Preços e Descontos
             'price' => 'required|numeric|min:0|decimal:0,2',
@@ -69,6 +70,7 @@ class ProductRequest extends FormRequest
         return [
             'name' => 'nome do produto',
             'description' => 'descrição',
+            'cover_photo_path' => 'foto de capa',
             'price' => 'preço',
             'promotional_price' => 'preço promocional',
             'discount_pix' => 'desconto do PIX',

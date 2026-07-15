@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description');
+            $table->string('cover_photo_path')->nullable(); // Guarda a imagem principal
 
             // Preços e Descontos
             $table->decimal('price', 10, 2);

@@ -3,14 +3,9 @@
 namespace App\Services\Product;
 
 use App\Models\Product;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
+use App\Models\Material;
+use App\Models\Category;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use Laravel\Socialite\Facades\Socialite;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use App\Jobs\SendEmailJob;
 
 class ProductService
 {
@@ -24,19 +19,49 @@ class ProductService
 
     public function create(array $data): Product
     {
-        $product = Product::create($data);
+        return DB::transaction(function () use ($data) {
+            $product = Product::create($data);
 
-        return $product;
+            if (filled($data['material'])) {
+                $product->syncRelations('material', Material::class, $data['material'] ?? []);
+            }
+            if (filled($data['category'])) {
+                $product->syncRelations('category', Category::class, $data['category'] ?? []);
+            }
+            if (filled($data['photos_paths'])) {
+                // Transforma o array de strings em um array associativo aceito pelo createMany
+                $photos = collect($data['photos_paths'])->map(fn($url) => ['photo_url' => $url])->toArray();
+                $product->photos()->createMany($photos);
+            }
+
+            return $product;
+        });
     }
 
     public function update(array $data): Product
     {
-        $product = Product::where('id', $data['id'])
-            ->firstOrFail();
+        return DB::transaction(function () use ($data) {
+            $product = Product::where('id', $data['id'])
+                ->firstOrFail();
 
-        $product->update($data);
+            $product->update($data);
 
-        return $product;
+            if (filled($data['material'])) {
+                $product->syncRelations('materials', Material::class, $data['material'] ?? []);
+            }
+            if (filled($data['category'])) {
+                $product->syncRelations('categories', Category::class, $data['category'] ?? []);
+            }
+            if (isset($data['photos_paths'])) {
+                // Remove as fotos antigas da galeria para salvar o novo conjunto enviado
+                $product->photos()->delete();
+
+                $photos = collect($data['photos_paths'])->map(fn($url) => ['photo_url' => $url])->toArray();
+                $product->photos()->createMany($photos);
+            }
+
+            return $product;
+        });
     }
 
     public function delete(array $data): bool
@@ -49,8 +74,8 @@ class ProductService
         return true;
     }
 
-    public function list(array $data)
+    public function list(int $perPage = 10)
     {
-        return Product::paginate(10)->withQueryString();
+        return Product::latest()->paginate($perPage)->withQueryString();
     }
 }

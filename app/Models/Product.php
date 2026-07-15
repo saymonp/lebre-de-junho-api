@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Product extends Model
 {
@@ -23,5 +24,15 @@ class Product extends Model
         'stock',
         'days_to_create'
     ];
+
+    public function materials(): BelongsToMany
+    {
+        return $this->belongsToMany(Material::class, 'material_product');
+    }
+
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class, 'category_product');
+    }
 
 }

@@ -43,3 +43,11 @@ Route::middleware(['auth:sanctum'])->prefix('addresses')->group(function () {
     Route::get('/{id}', [AddressController::class, 'show']);
     Route::get('/', [AddressController::class, 'index']);
 });
+
+Route::get('/ping', function () {
+    return response()->json([
+        'status' => 'ok',
+        'server' => request()->getPort(),
+        'timestamp' => now()->toDateTimeString(),
+    ]);
+});

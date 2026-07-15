@@ -42,4 +42,16 @@ class Product extends Model
         return $this->hasMany(ProductPhoto::class, 'product_id');
     }
 
+    public function syncRelations($relation, $modelClass, $names)
+    {
+        if (empty($names)) return;
+
+        $ids = collect($names)->map(function ($name) use ($modelClass) {
+            $record = $modelClass::firstOrCreate(['name' => trim($name)]);
+            return $record->id;
+        });
+
+        $this->$relation()->sync($ids);
+    }
+
 }

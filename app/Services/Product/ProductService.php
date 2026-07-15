@@ -23,10 +23,10 @@ class ProductService
             $product = Product::create($data);
 
             if (filled($data['material'])) {
-                $product->syncRelations('material', Material::class, $data['material'] ?? []);
+                $product->syncRelations('materials', Material::class, $data['material'] ?? []);
             }
             if (filled($data['category'])) {
-                $product->syncRelations('category', Category::class, $data['category'] ?? []);
+                $product->syncRelations('categories', Category::class, $data['category'] ?? []);
             }
             if (filled($data['photos_paths'])) {
                 // Transforma o array de strings em um array associativo aceito pelo createMany

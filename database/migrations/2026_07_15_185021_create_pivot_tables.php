@@ -29,6 +29,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pivot_tables');
+        Schema::dropIfExists('category_product');
+        Schema::dropIfExists('material_product');
     }
 };

@@ -19,7 +19,7 @@ return new class extends Migration
 
         Schema::create('material_product', function (Blueprint $table) {
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-            $table->foreignId('material_id')->constrained('material')->onDelete('cascade');
+            $table->foreignId('material_id')->constrained('materials')->onDelete('cascade');
             $table->primary(['product_id', 'material_id']);
         });
     }

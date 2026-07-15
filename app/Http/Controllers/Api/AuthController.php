@@ -28,10 +28,12 @@ class AuthController extends Controller
     {
         // O FormRequest já validou os dados
         $user = $this->service->register($request->validated());
-
+        $apiToken = $user->createToken('auth_token')->plainTextToken;
         return response()->json([
             'message' => 'Cadastro realizado com sucesso! Por favor, verifique sua caixa de entrada para confirmar seu e-mail.',
-            'user'    => new UserResource($user)
+            'access_token' => $apiToken,
+            'token_type'   => 'Bearer',
+            'user'         => new UserResource($user->load(['roles', 'permissions'])),
         ], 201);
     }
 

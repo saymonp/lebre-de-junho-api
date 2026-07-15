@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\AdminUserController;
 use App\Http\Controllers\Api\AddressController;
+use App\Http\Controllers\Api\ProductController;
 
 // 1. ROTAS PÚBLICAS (AuthController)
 Route::post('/register', [AuthController::class, 'register']);
@@ -42,4 +43,21 @@ Route::middleware(['auth:sanctum'])->prefix('addresses')->group(function () {
     Route::delete('/{id}', [AddressController::class, 'destroy']);
     Route::get('/{id}', [AddressController::class, 'show']);
     Route::get('/', [AddressController::class, 'index']);
+});
+
+// ROTAS DE PRODUTO
+Route::middleware(['auth:sanctum', 'role:admin'])->prefix('products')->group(function () {
+    Route::post('/', [ProductController::class, 'store']);
+    Route::put('/{id}', [ProductController::class, 'update']);
+    Route::delete('/{id}', [ProductController::class, 'destroy']);
+    Route::get('/{id}', [ProductController::class, 'show']);
+    Route::get('/', [ProductController::class, 'index']);
+});
+
+Route::get('/ping', function () {
+    return response()->json([
+        'status' => 'ok',
+        'server' => request()->getPort(),
+        'timestamp' => now()->toDateTimeString(),
+    ]);
 });

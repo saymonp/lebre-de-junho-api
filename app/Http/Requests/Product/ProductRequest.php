@@ -52,11 +52,14 @@ class ProductRequest extends FormRequest
             'days_to_create' => 'required|integer|min:0',
 
             // Relacionamentos (Associações de Categorias e Materiais)
-            'category_ids' => 'required|array|min:1', // Exige pelo menos uma categoria vinculada
-            'category_ids.*' => 'integer|exists:categories,id', // Valida se cada ID existe na tabela de categorias
+            'category' => 'required|array|min:1', // Exige pelo menos uma categoria vinculada
+            'category.*' => 'string', 
 
-            'material_ids' => 'nullable|array', // Materiais podem ser opcionais
-            'material_ids.*' => 'integer|exists:materials,id', // Valida se cada ID existe na tabela de materiais
+            'material' => 'nullable|array', // Materiais podem ser opcionais
+            'material.*' => 'string',
+
+            'photos_paths' => 'nullable|array',
+            'photos_paths.*' => 'string'
         ];
     }
 

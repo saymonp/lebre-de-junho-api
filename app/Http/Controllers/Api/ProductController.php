@@ -26,7 +26,7 @@ class ProductController extends Controller
     {
         $products = $this->productService->list();
 
-        return response()->json($products, 200);
+        return ProductResource::collection($products);
     }
 
     /**
@@ -55,9 +55,12 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ProductRequest $request, int $id)
     {
+        // Obtém os dados validados pelo ProductRequest
         $data = $request->validated();
+
+        $data['id'] = $id;
 
         $product = $this->productService->update($data);
 

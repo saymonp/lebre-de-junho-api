@@ -3,15 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
 use App\Services\Address\AddressService;
-use App\Http\Requests\AssignPermissionsRequest;
 use App\Http\Requests\Address\AddressRequest;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Spatie\Permission\Models\Role;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class AddressController extends Controller
 {

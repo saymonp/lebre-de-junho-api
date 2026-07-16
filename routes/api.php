@@ -50,9 +50,9 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('products')->group(fun
     Route::post('/', [ProductController::class, 'store']);
     Route::put('/{id}', [ProductController::class, 'update']);
     Route::delete('/{id}', [ProductController::class, 'destroy']);
-    Route::get('/{id}', [ProductController::class, 'show']);
-    Route::get('/', [ProductController::class, 'index']);
 });
+Route::get('products/{id}', [ProductController::class, 'show']);
+Route::get('products/', [ProductController::class, 'index']);
 
 Route::get('/ping', function () {
     return response()->json([

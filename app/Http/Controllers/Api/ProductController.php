@@ -25,7 +25,7 @@ class ProductController extends Controller
     {
         $products = $this->productService->list();
 
-        return ProductResource::collection($products);
+        return $products;
     }
 
     /**

@@ -52,6 +52,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('products')->group(fun
     Route::put('/{id}', [ProductController::class, 'update']);
     Route::delete('/{id}', [ProductController::class, 'destroy']);
     Route::post('/uploads/presigned-url', [UploadController::class, 'generatePresignedUrl']);
+    Route::post('/uploads/presigned-delete', [UploadController::class, 'generatePresignedDeleteUrl']);
 });
 Route::get('products/{id}', [ProductController::class, 'show']);
 Route::get('products/', [ProductController::class, 'index']);

@@ -55,4 +55,37 @@ class UploadController extends Controller
             'file_url' => $fileUrl,
         ]);
     }
+
+    /**
+     * Gera uma URL assinada temporária para deletar um arquivo.
+     */
+    public function generatePresignedDeleteUrl(\Illuminate\Http\Request $request): JsonResponse
+    {
+        $request->validate([
+            'file_url' => 'required|string'
+        ]);
+
+        // Extrai o caminho relativo (Key) a partir da URL completa
+        $parsedUrl = parse_url($request->input('file_url'), PHP_URL_PATH);
+        // Ex: transforma "/lebre-de-junho/products/gallery/foto.avif" em "products/gallery/foto.avif"
+        /** @disregard */
+        $bucketName = Storage::disk('s3')->getConfig()['bucket'];
+        $path = ltrim(str_replace("/{$bucketName}/", '', $parsedUrl), '/');
+
+        $disk = Storage::disk('s3');
+        /** @disregard */
+        $client = $disk->getClient();
+
+        /** @disregard */
+        $command = $client->getCommand('DeleteObject', [
+            'Bucket' => $disk->getConfig()['bucket'],
+            'Key' => $path,
+        ]);
+
+        $presignedRequest = $client->createPresignedRequest($command, '+10 minutes');
+
+        return response()->json([
+            'delete_url' => (string) $presignedRequest->getUri()
+        ]);
+    }
 }

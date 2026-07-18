@@ -189,7 +189,7 @@ class UserService
     public function deleteOwnAccount(User $user): bool
     {
         // 1. Deleta em modo Soft Delete todos os endereços do usuário
-        $user->addresses()->delete();
+        $user->address()->delete();
 
         // 2. Revoga TODOS os tokens de acesso (desloga de todos os dispositivos)
         $user->tokens()->delete();

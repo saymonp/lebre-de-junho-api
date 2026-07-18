@@ -23,6 +23,5 @@ RUN chown -R www-data:www-data storage bootstrap/cache
 ENV PORT=8080
 EXPOSE 8080
 
-
-# Comando
-CMD ["frankenphp", "php-server", ":$PORT"]
+# 2. Ajustado o CMD para rodar via shell (permitindo ler a $PORT) e apontando para a pasta public
+CMD ["sh", "-c", "frankenphp php-server --root ./public :$PORT"]

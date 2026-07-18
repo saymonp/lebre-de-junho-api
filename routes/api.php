@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\AdminUserController;
 use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\UploadController;
+use App\Http\Controllers\Api\ShippingController;
 
 // 1. ROTAS PÚBLICAS (AuthController)
 Route::post('/register', [AuthController::class, 'register']);
@@ -50,9 +52,12 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('products')->group(fun
     Route::post('/', [ProductController::class, 'store']);
     Route::put('/{id}', [ProductController::class, 'update']);
     Route::delete('/{id}', [ProductController::class, 'destroy']);
-    Route::get('/{id}', [ProductController::class, 'show']);
-    Route::get('/', [ProductController::class, 'index']);
+    Route::post('/uploads/presigned-url', [UploadController::class, 'generatePresignedUrl']);
+    Route::post('/uploads/presigned-delete', [UploadController::class, 'generatePresignedDeleteUrl']);
 });
+Route::get('products/{id}', [ProductController::class, 'show']);
+Route::get('products/', [ProductController::class, 'index']);
+Route::post('shipping/calculate', [ShippingController::class, 'calculate']);
 
 Route::get('/ping', function () {
     return response()->json([

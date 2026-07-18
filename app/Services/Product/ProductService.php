@@ -76,6 +76,6 @@ class ProductService
 
     public function list(int $perPage = 10)
     {
-        return Product::latest()->paginate($perPage)->withQueryString();
+        return Product::select('id', 'name', 'price', 'promotional_price', 'cover_photo_path', 'discount_pix', 'stock')->latest()->paginate($perPage)->withQueryString();
     }
 }

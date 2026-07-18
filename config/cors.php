@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'], // Em produção, troque '*' pela URL definitiva
+    'allowed_origins' => explode(',', env('ALLOWED_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000')),
 
     'allowed_origins_patterns' => [],
 

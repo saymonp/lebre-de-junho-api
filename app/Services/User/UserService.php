@@ -145,6 +145,33 @@ class UserService
         return $user;
     }
 
+    public function sendValidationEmail(User $user): bool
+    {
+        $token = Str::random(60);
+        
+        // Salva o token temporário associado ao e-mail
+        DB::table('email_verification_tokens')->updateOrInsert(
+            ['email' => $user->email],
+            [
+                'token' => Hash::make($token),
+                'created_at' => now()
+            ]
+        );
+
+        $frontUrl = config('app.frontend_url');
+
+        // Dispara o Job de e-mail em segundo plano
+        SendEmailJob::dispatch(
+            $user->email,
+            'Confirme seu e-mail - Lebre de Junho',
+            "<h1>Bem-vindo(a), {$user->name}!</h1>
+             <p>Obrigado por se cadastrar na Lebre de Junho. Para ativar sua conta, confirme seu e-mail clicando no link abaixo:</p>
+             <a href='{$frontUrl}/verify-email?token={$token}&email=" . urlencode($user->email) . "'>Confirmar E-mail</a>"
+        );
+
+        return true;
+    }
+
     public function login(array $data): User
     {
         $user = User::where('email', $data['email'])->first();
@@ -221,14 +248,14 @@ class UserService
             $frontUrl = config('app.frontend_url');
 
             // Dispara o Job enviando o $token limpo na URL para o cliente clicar
-             SendEmailJob::dispatch(
-                 $user->email,
-                 'Recuperação de Senha - Lebre de Junho',
-                 "<h1>Olá, {$user->name}!</h1>
+            SendEmailJob::dispatch(
+                $user->email,
+                'Recuperação de Senha - Lebre de Junho',
+                "<h1>Olá, {$user->name}!</h1>
               <p>Recebemos uma solicitação para redefinir a sua senha.</p>
               <p>Clique no link abaixo para prosseguir:</p>
               <a href='{$frontUrl}/reset-password?token={$token}&email=" . urlencode($user->email) . "'>Redefinir Senha</a>"
-             );
+            );
         }
 
         return true;

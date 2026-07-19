@@ -61,6 +61,16 @@ class AuthController extends Controller
         ], 200);
     }
 
+    public function sendEmailVerification(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        $user = $this->service->sendValidationEmail($user);
+
+        return response()->json([
+            'message' => 'Por favor, verifique sua caixa de entrada para confirmar seu e-mail.'
+        ], 201);
+    }
+
     public function login(LoginRequest $request): JsonResponse
     {
         // 1. Aciona o service passando os dados validados do request

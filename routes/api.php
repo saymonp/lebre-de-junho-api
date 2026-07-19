@@ -22,6 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/user', [ProfileController::class, 'update']);
     Route::delete('/user', [ProfileController::class, 'deleteOwnAccount']);
     Route::post('/logout', [AuthController::class, 'logout']); // O logout usa a infra de auth
+    Route::post('/send-email-verify', [AuthController::class, 'sendEmailVerification']);
 });
 
 // 3. ROTAS ADMINISTRATIVAS (AdminUserController)

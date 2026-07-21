@@ -144,7 +144,8 @@ class AuthController extends Controller
     {
         try {
             // Captura os dados vindos do Google através do Socialite
-            $googleUser = Socialite::driver('google')->user();
+            /** @disregard */
+            $googleUser = Socialite::driver('google')->stateless()->user();
 
             // Executa a lógica de negócio no Service e pega o Token gerado
             $apiToken = $this->service->loginOrCreateFromGoogle($googleUser);
@@ -156,7 +157,7 @@ class AuthController extends Controller
             return redirect()->away("{$frontendUrl}/auth/success?token={$apiToken}");
             
         } catch (\Exception $e) {
-            // Em caso de erro (ex: token do Google expirado), manda para uma tela de erro no front
+            \Illuminate\Support\Facades\Log::error('Erro no Google Callback: ' . $e->getMessage());
             $frontendUrl = config('services.google.redirect_frontend');
             return redirect()->away("{$frontendUrl}/auth/error?message=failed_google_auth");
         }

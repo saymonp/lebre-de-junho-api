@@ -32,7 +32,8 @@ class User extends Authenticatable
         'password',
         'google_id',
         'aceitou_termos',
-        'termos_versao'
+        'termos_versao',
+        'email_verified_at'
     ];
     /**
      * Get the attributes that should be cast.

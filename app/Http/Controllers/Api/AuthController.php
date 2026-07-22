@@ -153,9 +153,13 @@ class AuthController extends Controller
             // Busca a URL base do frontend
             $frontendUrl = config('services.google.redirect_frontend');
 
+            $queryString = http_build_query([
+                'token' => $apiToken
+            ]);
+
             // Redireciona o navegador do usuário direto para a página de sucesso do Nuxt
-            return redirect()->away("{$frontendUrl}/auth/success?token={$apiToken}");
-            
+            return redirect()->away("{$frontendUrl}/auth/success?{$queryString}");
+
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Erro no Google Callback: ' . $e->getMessage());
             $frontendUrl = config('services.google.redirect_frontend');

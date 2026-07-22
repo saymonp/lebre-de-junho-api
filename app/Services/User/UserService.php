@@ -52,6 +52,7 @@ class UserService
         ], [
             'name'      => $googleUser->getName(),
             'google_id' => $googleUser->getId(),
+            'aceitou_termos' => true,
             'email_verified_at' => now()
         ]);
 
